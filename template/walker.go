@@ -11,7 +11,8 @@ var (
 )
 
 type Template struct {
-	Name string
+	Name       string
+	TargetFile string
 }
 
 func WalkTemplateDir(dir string) ([]Template, error) {
@@ -22,7 +23,7 @@ func WalkTemplateDir(dir string) ([]Template, error) {
 		}
 
 		if !info.IsDir() && strings.HasSuffix(path, fileType) {
-			templates = append(templates, Template{path})
+			templates = append(templates, Template{path, RemoveBasePath(dir, path)})
 		}
 		return nil
 	})
@@ -30,4 +31,8 @@ func WalkTemplateDir(dir string) ([]Template, error) {
 		return nil, err
 	}
 	return templates, nil
+}
+
+func RemoveBasePath(basePath, fullPath string) string {
+	return fullPath
 }

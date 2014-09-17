@@ -4,6 +4,7 @@ import (
 	"flag"
 	"fmt"
 	"os"
+	"sync"
 
 	"github.com/docker-conf/template"
 )
@@ -42,9 +43,20 @@ func main() {
 		os.Exit(1)
 	}
 
+	var wg sync.WaitGroup
+
 	for _, element := range templates {
-		fmt.Printf("Processing: %s\n", element.Name)
+		wg.Add(1)
+		go func(file template.Template) {
+			defer wg.Done()
+			err := template.ProcessTemplate(file)
+			if err != nil {
+				fmt.Printf("Encountered an error processing file (%s): %s\n", file.Name, err.Error())
+			}
+		}(element)
 	}
+
+	wg.Wait()
 }
 
 // IsFileExist reports whether path exits.
