@@ -23,4 +23,4 @@ Template Format
 
 docker-conf templates use the following format for creating templates.  Template files must end with `.tmpl`  The `.tmpl` will get removed when processing occurs so if you have a file named `nginx.conf.tmpl` the resulting file will be named `nginx.conf`
 
-You can inject values into the template files with `{{ env name }}` where `env` is telling docker-conf to look for the variable `name` in the enviornment variables
+You can inject values into the template files with `{{ env name }}` where `env` is telling docker-conf to look for the enviornment variable `name`
