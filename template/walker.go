@@ -34,5 +34,5 @@ func WalkTemplateDir(dir string) ([]Template, error) {
 }
 
 func RemoveBasePath(basePath, fullPath string) string {
-	return fullPath
+	return strings.TrimSuffix(fullPath, ".tmpl")
 }

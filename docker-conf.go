@@ -6,7 +6,7 @@ import (
 	"os"
 	"sync"
 
-	"github.com/docker-conf/template"
+	"github.com/GreyRockSoft/docker-conf/template"
 )
 
 var (

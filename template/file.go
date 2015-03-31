@@ -2,20 +2,20 @@ package template
 
 import (
 	"fmt"
+	"io/ioutil"
 	"os"
+	"path"
 	tmpl "text/template"
 )
 
-var (
-	funcMap map[string]interface{}
-)
-
-func init() {
+func getFuncMap() map[string]interface{} {
 	funcMap := make(map[string]interface{})
-	funcMap["env"] = getEnv
+	funcMap["env"] = GetEnv
+
+	return funcMap
 }
 
-func getEnv(envname string) (string, error) {
+func GetEnv(envname string) (string, error) {
 	env := os.Getenv(envname)
 	if env == "" {
 		return "", fmt.Errorf("Could not find the enviornment variable %s", envname)
@@ -26,15 +26,18 @@ func getEnv(envname string) (string, error) {
 func ProcessTemplate(file Template) error {
 	// assume that file exists and is a tmpl file
 	fmt.Printf("Processing env replacement for source file (%s) to target file (%s)\n", file.Name, file.TargetFile)
-	confTmpl, err := tmpl.ParseFiles(file.Name)
+	confTmpl := tmpl.New(file.TargetFile)
+
+	fileContents, err := ioutil.ReadFile(file.Name)
+
+	fmt.Printf("Adding custom functions and parsing template\n")
+	confTmpl, err = confTmpl.Funcs(getFuncMap()).Parse(string(fileContents))
 
 	if err != nil {
 		return err
 	}
 
-	confTmpl.Funcs(funcMap)
-
-	err = os.MkdirAll(file.TargetFile, 0755)
+	err = os.MkdirAll(path.Dir(file.TargetFile), 0755)
 
 	if err != nil {
 		return err
