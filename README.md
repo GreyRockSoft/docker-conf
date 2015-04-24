@@ -10,7 +10,7 @@ Inside of a wrapper script you would use docker-conf this way:
 
 ```bash
 #!/bin/bash
-docker-conf -t /opt/templates
+docker-conf -template-dir /opt/templates
 
 run_your_app_here
 
@@ -23,4 +23,4 @@ Template Format
 
 docker-conf templates use the following format for creating templates.  Template files must end with `.tmpl`  The `.tmpl` will get removed when processing occurs so if you have a file named `nginx.conf.tmpl` the resulting file will be named `nginx.conf`
 
-You can inject values into the template files with `{{ env name }}` where `env` is telling docker-conf to look for the enviornment variable `name`
+You can inject values into the template files with `{{ env "name" }}` where `env` is telling docker-conf to look for the enviornment variable `name`
